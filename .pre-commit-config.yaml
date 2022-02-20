@@ -1,0 +1,23 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/markdownlint/markdownlint
+    rev: v0.11.0
+    hooks:
+    -   id: markdownlint
+        name: Markdownlint
+        description: Run markdownlint on your Markdown files
+        entry: mdl
+        language: ruby
+        types: [markdown]
+-   repo: local
+    hooks:
+    -   id: mdformat
+        name: mdformat
+        entry: poetry run mdformat --wrap 80
+        language: system
+        types: [markdown]
