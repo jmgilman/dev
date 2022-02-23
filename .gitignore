@@ -1,2 +1,5 @@
 # No node vendoring
 node_modules
+
+# No direnv cache
+.direnv
