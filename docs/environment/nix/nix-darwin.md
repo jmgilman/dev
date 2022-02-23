@@ -1,9 +1,8 @@
 # Nix-Darwin
 
 [nix-darwin](https://github.com/LnL7/nix-darwin) is an opionated set of modules
-for managing system-wide packages on macOS. It provides a centralized nix file
-for declaring what packages are globally available in my development
-environment.
+for managing configuration of macOS. It provides a centralized nix file for
+declaring system state.
 
 ## Resources
 
@@ -31,6 +30,16 @@ time of this writing, it was necessary to add the following:
 After installing, the configuration will be located at
 `~/.nixpkgs/darwin-configuration.nix`.
 
+On a fresh install, it was necessary to perform the following:
+
+```bash
+sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.backup
+```
+
+This allows `nix-darwin` to manage the above file and will remove a warning
+that's produced every time the environment is built. See
+[this issue](https://github.com/LnL7/nix-darwin/issues/149).
+
 ## Uninstall
 
 ```bash
@@ -48,11 +57,7 @@ The configuration is managed by Chezmoi, to edit it:
 chezmoi edit ~/.nixpkgs/darwin-configuration.nix && chezmoi apply
 ```
 
-To make the changes take effect:
-
-```bash
-darwin-rebuild switch
-```
+The changes will automatically be applied by a Chezmoi trigger.
 
 ### Update channel
 
