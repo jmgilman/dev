@@ -10,6 +10,7 @@
       in {
         devShell = pkgs.mkShell {
           buildInputs = [
+            pkgs.mdl
             pkgs.python310 (
               pkgs.poetry.override { python = pkgs.python310; }
             )

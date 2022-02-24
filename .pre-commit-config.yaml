@@ -16,7 +16,7 @@ repos:
     -   id: markdownlint
         name: Markdownlint
         description: Run markdownlint on your Markdown files
-        entry: mdls -c .pre-commit-config.yamls
+        entry: mdl -c .pre-commit-config.yaml
         language: ruby
         types: [markdown]
 -   repo: local
