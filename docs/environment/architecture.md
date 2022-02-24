@@ -73,7 +73,7 @@ or `pyenv` since Nix will automatically handle pulling down the right binaries
 dependening on what the project requires. This is by far the shining feature of
 Nix to me and is what primarily won me over in switching to it.
 
-For reference material and guides, see [Nix](nix.md).
+For reference material and guides, see [Nix](nix/index.md).
 
 ## Homebrew
 
