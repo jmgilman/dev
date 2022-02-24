@@ -9,7 +9,11 @@
       let pkgs = nixpkgs.legacyPackages.${system};
       in {
         devShell = pkgs.mkShell {
-          buildInputs = [ pkgs.python310 (pkgs.poetry.override { python = pkgs.python310; }) ];
+          buildInputs = [
+            pkgs.python310 (
+              pkgs.poetry.override { python = pkgs.python310; }
+            )
+          ];
         };
       });
 }
