@@ -1,14 +1,13 @@
 # Nix-Darwin
 
-[nix-darwin](https://github.com/LnL7/nix-darwin) is an opionated set of modules
-for managing configuration of macOS. It provides a centralized nix file for
-declaring system state.
+[nix-darwin][@1] is an opionated set of modules for managing configuration of
+macOS. It provides a centralized nix file for declaring system state.
 
 ## Resources
 
-- [Repository](https://github.com/LnL7/nix-darwin)
-- [Documentation](https://daiderd.com/nix-darwin/manual/index.html)
-- [Wiki](https://github.com/LnL7/nix-darwin/wiki)
+- [Repository][@2]
+- [Documentation][@3]
+- [Wiki][@4]
 
 ## Install
 
@@ -37,8 +36,7 @@ sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.backup
 ```
 
 This allows `nix-darwin` to manage the above file and will remove a warning
-that's produced every time the environment is built. See
-[this issue](https://github.com/LnL7/nix-darwin/issues/149).
+that's produced every time the environment is built. See [this issue][@5].
 
 ## Uninstall
 
@@ -82,4 +80,13 @@ following notes are helpful:
 1. Uninstall the package from `homebrew`: `brew uninstall <package> --force`
 
 Searching packages using `nix-env` can be slow, an alternative is to use the
-[web interface](https://nixos.org/nixos/packages.html#).
+[web interface][@6].
+
+<!-- reference links -->
+
+[@1]: https://github.com/LnL7/nix-darwin
+[@2]: https://github.com/LnL7/nix-darwin
+[@3]: https://daiderd.com/nix-darwin/manual/index.html
+[@4]: https://github.com/LnL7/nix-darwin/wiki
+[@5]: https://github.com/LnL7/nix-darwin/issues/149
+[@6]: https://nixos.org/nixos/packages.html#

@@ -1,22 +1,21 @@
 # Home-Manager
 
-The [home-manager](https://github.com/nix-community/home-manager) project
-provides a framework for managing user environments using [Nix](index.md). It
-adopts the same declarative approach for defining how user environments should
-be configured including what packages are available, how to configure dotfiles,
-and other related settings.
+The [home-manager][@01] project provides a framework for managing user
+environments using [Nix][@02]. It adopts the same declarative approach for
+defining how user environments should be configured including what packages are
+available, how to configure dotfiles, and other related settings.
 
 ## Resources
 
-- [Repository](https://github.com/nix-community/home-manager)
-- [Wiki](https://nixos.wiki/wiki/Home_Manager)
-- [My dotfile](https://github.com/jmgilman/dotfiles/blob/master/dot_nixpkgs/darwin-configuration.nix)
+- [Repository][@03]
+- [Wiki][@04]
+- [My dotfile][@05]
 
 ## Install
 
-The project is installed via integration with [nix-darwin](nix-darwin.md). This
-greatly reduces the complexity of managing the environment as everything is
-contained within a single file.
+The project is installed via integration with [nix-darwin][@06]. This greatly
+reduces the complexity of managing the environment as everything is contained
+within a single file.
 
 Example:
 
@@ -37,25 +36,22 @@ Example:
 
 ## Usage
 
-Configuration is done through the `nix-darwin`
-[configuration file](nix-darwin.md#update-configuration). The options available
-are very wide-ranging but the general format is best understood by looking at
-the [source](https://github.com/nix-community/home-manager/tree/master/modules).
-For example, it's possible to configure `zsh` which is located under the
-`programs` module (`modules/programs/zsh.nix`). Looking at the associated
-[file](https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix)
-reveals the general configuration structure for the program. To enable `zsh` for
-a user you would set:
+Configuration is done through the `nix-darwin` [configuration file][@07]. The
+options available are very wide-ranging but the general format is best
+understood by looking at the [source][@08]. For example, it's possible to
+configure `zsh` which is located under the `programs` module
+(`modules/programs/zsh.nix`). Looking at the associated [file][@09] reveals the
+general configuration structure for the program. To enable `zsh` for a user you
+would set:
 
 ```nix
 programs.zsh.enable = true;
 ```
 
-Most of the configuration for the development environment is done via
-[zsh](https://www.zsh.org/) and [oh-my-zsh](https://ohmyz.sh/). The
-`home-manager` configuration provides dedicated sections for both of the tools.
-The remainder of this section contains pointers for how to achieve specific
-goals within the configuration.
+Most of the configuration for the development environment is done via [zsh][@10]
+and [oh-my-zsh][@11]. The `home-manager` configuration provides dedicated
+sections for both of the tools. The remainder of this section contains pointers
+for how to achieve specific goals within the configuration.
 
 ### Modify .zshrc
 
@@ -119,3 +115,17 @@ Alternatively, a plugin can be manually installed from source:
       ];
     };
 ```
+
+<!-- reference links -->
+
+[@01]: https://github.com/nix-community/home-manager
+[@02]: index.md
+[@03]: https://github.com/nix-community/home-manager
+[@04]: https://nixos.wiki/wiki/Home_Manager
+[@05]: https://github.com/jmgilman/dotfiles/blob/master/dot_nixpkgs/darwin-configuration.nix
+[@06]: nix-darwin.md
+[@07]: nix-darwin.md#update-configuration
+[@08]: https://github.com/nix-community/home-manager/tree/master/modules
+[@09]: https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh.nix
+[@10]: https://www.zsh.org/
+[@11]: https://ohmyz.sh/

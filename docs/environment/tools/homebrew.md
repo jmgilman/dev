@@ -1,13 +1,13 @@
 # Homebrew
 
-[Homebrew](https://brew.sh/) provides package management for graphical
-applications in the environment. It does this through a versioned Bundle file
-that is tracked by Chezmoi.
+[Homebrew][@1] provides package management for graphical applications in the
+environment. It does this through a versioned Bundle file that is tracked by
+Chezmoi.
 
 ## Resources
 
-- [Website](https://brew.sh/)
-- [Personal tap](https://github.com/jmgilman/homebrew-apps)
+- [Website][@2]
+- [Personal tap][@3]
 
 ## Install
 
@@ -68,3 +68,9 @@ The `install` subcommand will also update applications:
 ```bash
 brew bundle install
 ```
+
+<!-- reference links -->
+
+[@1]: https://brew.sh/
+[@2]: https://brew.sh/
+[@3]: https://github.com/jmgilman/homebrew-apps
