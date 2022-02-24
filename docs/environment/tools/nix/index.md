@@ -2,8 +2,8 @@
 
 [Nix](https://nixos.org/) is the primary package management tool used for
 managing packages in my development environment. See the related
-[architecture](../architecture.md#nix) section for more details on how it fits
-into the overall environment.
+[architecture](../../architecture.md#nix) section for more details on how it
+fits into the overall environment.
 
 ## Resources
 

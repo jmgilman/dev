@@ -8,9 +8,9 @@ reinstalled for any reason.
 
 1. Install xcode: `xcode-select --install`
 1. Install Rosetta: `softwareupdate --install-rosetta`
-1. Install [Nix](nix/index.md#install) and
-   [nix-darwin](nix/nix-darwin.md#install)
-1. Install [Homebrew](homebrew.md#install)
+1. Install [Nix](tools/nix/index.md#install) and
+   [nix-darwin](tools/nix/nix-darwin.md#install)
+1. Install [Homebrew](tools/homebrew.md#install)
 1. Open a shell with `chezmoi`: `nix shell nixpkgs#chezmoi`
 1. Initialize dot-files: `chezmoi init https://github.com/jmgilman/dotfiles`
 1. Apply dotfiles: `chezmoi apply`
