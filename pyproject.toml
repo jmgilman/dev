@@ -14,6 +14,8 @@ mdformat = "^0.7.13"
 mdformat_tables = "^0.4.1"
 black = "^22.1.0"
 flake8 = "^4.0.1"
+invoke = "^1.6.0"
+makefun = "^1.13.1"
 
 [tool.black]
 line-length = 79
