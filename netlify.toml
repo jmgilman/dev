@@ -1,0 +1,8 @@
+[build]
+    command = """
+        pip install -q poetry && \
+        poetry export -f requirements.txt --without-hashes -o requirements.txt && \
+        pip install -r requirements.txt && \
+        mkdocs build
+    """
+    publish = "site"
