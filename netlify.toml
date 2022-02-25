@@ -5,4 +5,5 @@
         pip install -r requirements.txt && \
         mkdocs build
     """
+    ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ./docs"
     publish = "site"
