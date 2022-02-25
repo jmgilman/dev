@@ -1,0 +1,28 @@
+on:
+  push:
+    paths:
+      - docs/**
+      - README.md
+  pull_request:
+    paths:
+      - docs/**
+      - README.md
+  workflow_dispatch:
+
+name: CI
+
+jobs:
+  lint:
+    name: Run linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cachix/install-nix-action@v16
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - uses: cachix/cachix-action@v10
+        with:
+          name: dev
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - name: Run mdlint
+        run: nix develop -c mdl
