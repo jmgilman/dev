@@ -27,4 +27,4 @@ jobs:
           name: dev
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Run mdlint
-        run: nix develop -c mdl
+        run: nix develop -c "mdl ."
