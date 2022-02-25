@@ -16,13 +16,13 @@ repos:
     -   id: markdownlint
         name: Markdownlint
         description: Run markdownlint on your Markdown files
-        entry: mdl -c .pre-commit-config.yaml
+        entry: mdl README.md docs/
         language: ruby
         types: [markdown]
 -   repo: local
     hooks:
     -   id: mdformat
         name: mdformat
-        entry: poetry run mdformat --wrap 80
+        entry: poetry run mdformat --wrap 80 README.md docs/
         language: system
         types: [markdown]

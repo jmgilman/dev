@@ -27,9 +27,9 @@ jobs:
           name: jmgilman
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Run mdlint
-        run: nix develop -c mdl docs/
+        run: nix develop -c mdl README.md docs/
       - name: Run mdformat
-        run: nix develop -c mdformat --check docs/
+        run: nix develop -c mdformat --check README.md docs/
   build:
     name: Test build
     runs-on: ubuntu-latest
