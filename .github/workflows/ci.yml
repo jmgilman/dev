@@ -1,10 +1,12 @@
 on:
   push:
     paths:
+      - .github/**
       - docs/**
       - README.md
   pull_request:
     paths:
+      - .github/**
       - docs/**
       - README.md
   workflow_dispatch:
