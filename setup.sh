@@ -135,6 +135,26 @@ installNix() {
     log "Running nix installer..."
     bash "${tmpDir}/nix.sh"
     success "Nix installed successfully"
+
+    # nix shell requires nix-command which is experimental
+    # we also need to add flakes so we can run our development flakes
+    log 'Adding experimental features: nix-command flakes'
+    mkdir -p ~/.config/nix
+    echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf
+}
+
+# Usage: installNixDarwin
+#
+# Builds the nix-darwin installer and then executes it
+installNixDarwin() {
+    # nix-darwin complains if this file exists, so we back it up first
+    /usr/bin/sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.backup
+
+    log 'Building nix-darwin installer...'
+    cd ${tmpDir} && nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+
+    log 'Running nix-darwin installer...'
+    {$tmpDir}/result/bin/darwin-installer
 }
 
 # Usage installBrew
@@ -195,6 +215,12 @@ then
 
     log "Please run this installer script again to continue"
     exit 1
+fi
+
+# installing nix-darwin adds the darwin-rebuild command into $PATH
+if ! command -v darwin-rebuild &> /dev/null
+then
+    isRequired 'nix-darwin' 'installNixDarwin'
 fi
 
 log "Fetching dotfiles and initializing nix-darwin..."
