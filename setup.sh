@@ -123,7 +123,7 @@ installNix() {
     local checksumURL="${nixReleaseBase}/nix/nix-${nixVer}/install.sha256"
 
     log "Downloading install script from ${nixURL}..."
-    curl "${nixURL}" -o "${tmpDir}/nix.sh"
+    curl "${nixURL}" -o "${tmpDir}/nix.sh" &> /dev/null
     local sha=$(curl "${checksumURL}")
 
     log "Validating checksum..."
@@ -144,7 +144,7 @@ installBrew() {
     local brewURL="${brewRepo}/${brewCommitSha}/install.sh"
 
     log "Downloading install script from ${brewURL}..."
-    curl "${brewURL}" -o "${tmpDir}/brew.sh"
+    curl "${brewURL}" -o "${tmpDir}/brew.sh" &> /dev/null
 
     log "Validating checksum..."
     if ! echo "${brewChecksum}  ${tmpDir}/brew.sh" | shasum -a 256 -c
@@ -194,7 +194,7 @@ then
     isRequired 'nix' 'installNix'
 
     log "Please run this installer script again to continue"
-    exit(1)
+    exit 1
 fi
 
 log "Fetching dotfiles and initializing nix-darwin..."
