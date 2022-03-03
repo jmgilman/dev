@@ -157,7 +157,13 @@ installNixDarwin() {
     {$tmpDir}/result/bin/darwin-installer
 
     # nix-darwin manages nix itself, so we can remove the global version now
+    log "Removing redundant nix version..."
     /usr/bin/sudo -i nix-env -e nix
+
+    # home-manager is required by the current configuration
+    log "Adding home-manager channel..."
+    nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+    nix-channel --update
 }
 
 # Usage installBrew
@@ -249,13 +255,13 @@ else
     log "brew detected, skipping install"
 fi
 
-log "Fetching dotfiles..."
-nix shell nixpkgs#chezmoi -c chezmoi init "${dotfiles}"
+# log "Fetching dotfiles..."
+# nix shell nixpkgs#chezmoi -c chezmoi init "${dotfiles}"
 
-log "Applying dotfiles..."
-nix shell nixpkgs#chezmoi -c chezmoi apply
+# log "Applying dotfiles..."
+# nix shell nixpkgs#chezmoi -c chezmoi apply
 
-log "Initializing GPG..."
-gpg-agent --daemon
+# log "Initializing GPG..."
+# gpg-agent --daemon
 
 success 'Done!'
