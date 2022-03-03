@@ -223,6 +223,15 @@ then
     isRequired 'nix-darwin' 'installNixDarwin'
 fi
 
+if ! command -v bw &> /dev/null
+then
+    isRequired 'bitwarden-cli' 'nix-env -i bitwarden-cli'
+fi
+
+if ! command -v brew &> /dev/null
+    isRequired 'brew' 'installBrew'
+fi
+
 log "Fetching dotfiles..."
 nix shell nixpkgs#chezmoi -c chezmoi init "${dotfiles}"
 
