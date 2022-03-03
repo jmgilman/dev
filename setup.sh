@@ -60,7 +60,7 @@ die() {
 #
 # Asks the user to confirm via y/n syntax. Exits if answer is no.
 yesno() {
-    read -p "${*} [y/n] " -n 1 -r
+    read -p "${*} [y/n] " -r
     printf "\n"
     if [[ ! $REPLY =~ ^[Yy]$ ]]
     then
@@ -211,6 +211,8 @@ fi
 if ! command -v nix &> /dev/null
 then
     isRequired 'nix' 'installNix'
+else
+    log "nix detected, continuing"
 fi
 
 # a more full-featured check to validate it's actually installed correctly
@@ -221,22 +223,30 @@ then
 
     log "Please run this installer script again to continue"
     exit 1
+else
+    log "nix is healthy, continuing"
 fi
 
 # installing nix-darwin adds the darwin-rebuild command into $PATH
 if ! command -v darwin-rebuild &> /dev/null
 then
     isRequired 'nix-darwin' 'installNixDarwin'
+else
+    log "nix-darwin detected, skipping install"
 fi
 
 if ! command -v bw &> /dev/null
 then
     isRequired 'bitwarden-cli' 'nix-env -i bitwarden-cli'
+else
+    log "bitwarden-cli detected, skipping install"
 fi
 
 if ! command -v brew &> /dev/null
 then
     isRequired 'brew' 'installBrew'
+else
+    log "brew detected, skipping install"
 fi
 
 log "Fetching dotfiles..."
