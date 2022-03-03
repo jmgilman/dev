@@ -223,5 +223,8 @@ then
     isRequired 'nix-darwin' 'installNixDarwin'
 fi
 
-log "Fetching dotfiles and initializing nix-darwin..."
-nix shell nixpkgs#chezmoi -c chezmoi init ${dotfiles} && chezmoi apply
+log "Fetching dotfiles..."
+nix shell nixpkgs#chezmoi -c chezmoi init "${dotfiles}"
+
+log "Applying dotfiles..."
+nix shell nixpkgs#chezmoi -c chezmoi apply
