@@ -84,6 +84,9 @@ isRequired() {
 #
 # Downloads and installs the xcode command line tools
 # Source: https://github.com/Homebrew/install/blob/master/install.sh#L846
+chomp() {
+  printf "%s" "${1/"$'\n'"/}"
+}
 installXcode() {
     log "Searching online for the Command Line Tools"
 
