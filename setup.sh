@@ -177,7 +177,10 @@ installBrew() {
 
     log "Running brew installer..."
     bash "${tmpDir}/brew.sh"
-    success "Brew installed successfully"
+
+    log "Configuring environment..."
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.bash_profile"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 }
 
 # need a scratch space for downloading files
@@ -241,3 +244,8 @@ nix shell nixpkgs#chezmoi -c chezmoi init "${dotfiles}"
 
 log "Applying dotfiles..."
 nix shell nixpkgs#chezmoi -c chezmoi apply
+
+log "Initializing GPG..."
+gpg-agent --daemon
+
+success 'Done!'
