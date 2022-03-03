@@ -155,6 +155,9 @@ installNixDarwin() {
 
     log 'Running nix-darwin installer...'
     {$tmpDir}/result/bin/darwin-installer
+
+    # nix-darwin manages nix itself, so we can remove the global version now
+    /usr/bin/sudo -i nix-env -e nix
 }
 
 # Usage installBrew
@@ -229,6 +232,7 @@ then
 fi
 
 if ! command -v brew &> /dev/null
+then
     isRequired 'brew' 'installBrew'
 fi
 
