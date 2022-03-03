@@ -127,7 +127,7 @@ installNix() {
     local sha=$(curl "${checksumURL}")
 
     log "Validating checksum..."
-    if ! echo "${sha} ${tmpDir}/nix.sh" | sha256sum -c
+    if ! echo "${sha}  ${tmpDir}/nix.sh" | shasum -a 256 -c
     then
         die "Checksum validation failed; cannot continue"
     fi
@@ -147,7 +147,7 @@ installBrew() {
     curl "${brewURL}" -o "${tmpDir}/brew.sh"
 
     log "Validating checksum..."
-    if ! echo "${brewChecksum} ${tmpDir}/brew.sh" | sha256sum -c
+    if ! echo "${brewChecksum}  ${tmpDir}/brew.sh" | shasum -a 256 -c
     then
         die "Checksum validation failed; cannot continue"
     fi
