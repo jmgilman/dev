@@ -72,12 +72,15 @@ yesno() {
 #
 # Asks the user permission to install NAME and then runs EXECUTABLE
 isRequired() {
-    log "It appears that ${1} is not installed and is required to continue."
+    local name=${1}
+    local executable=${2}
+
+    log "It appears that ${name} is not installed and is required to continue."
     yesno "Would you like to install it?"
 
-    log "Installing ${1}..."
-    ${2}
-    success "${1} was successfully installed"
+    log "Installing ${name}..."
+    ${executable}
+    success "${name} was successfully installed"
 }
 
 # Usage: installXcode
@@ -117,7 +120,7 @@ installXcode() {
 # Downloads and executes the nix installer script
 installNix() {
     local nixURL="${nixReleaseBase}/nix/nix-${nixVer}/install"
-    local checksumURL="${releaseBase}/nix/nix-${nixVer}/install.sha256"
+    local checksumURL="${nixReleaseBase}/nix/nix-${nixVer}/install.sha256"
 
     log "Downloading install script from ${nixURL}..."
     curl "${nixURL}" -o "${tmpDir}/nix.sh"
