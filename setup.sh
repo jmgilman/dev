@@ -80,6 +80,35 @@ isRequired() {
     success "${1} was successfully installed"
 }
 
+# Usage: installXcode
+#
+# Downloads and installs the xcode command line tools
+# Source: https://github.com/Homebrew/install/blob/master/install.sh#L846
+installXcode() {
+    log "Searching online for the Command Line Tools"
+
+    # This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
+    clt_placeholder="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+    /usr/bin/sudo /usr/bin/touch "${clt_placeholder}"
+
+    clt_label_command="/usr/sbin/softwareupdate -l |
+                        grep -B 1 -E 'Command Line Tools' |
+                        awk -F'*' '/^ *\\*/ {print \$2}' |
+                        sed -e 's/^ *Label: //' -e 's/^ *//' |
+                        sort -V |
+                        tail -n1"
+    clt_label="$(chomp "$(/bin/bash -c "${clt_label_command}")")"
+
+    if [[ -n "${clt_label}" ]]
+    then
+        log "Installing ${clt_label}"
+        /usr/bin/sudo "/usr/sbin/softwareupdate" "-i" "${clt_label}"
+        /usr/bin/sudo "/usr/bin/xcode-select" "--switch" "/Library/Developer/CommandLineTools"
+    fi
+
+    /usr/bin/sudo "/bin/rm" "-f" "${clt_placeholder}"
+}
+
 # Usage: installNix
 #
 # Downloads and executes the nix installer script
@@ -124,7 +153,7 @@ installBrew() {
 
 # need a scratch space for downloading files
 tmpDir=$(mktemp -d -t dev-setup-XXXXXXXXXX)
-if [[ ! -d tmp_dir ]]
+if [[ ! -d "$tmpDir" ]]
 then
     die "Failed creating a temporary directory; cannot continue"
 fi
@@ -132,7 +161,7 @@ fi
 # xcode is needed for building most software from source
 if ! /usr/bin/xcode-select -p &> /dev/null
 then
-    isRequired 'xcode' 'xcode-select --install'
+    isRequired 'xcode' 'installXcode'
 else
     log "xcode detected, skipping install"
 fi
