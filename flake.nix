@@ -25,7 +25,7 @@
         devShell = pkgs.mkShell {
           packages = [
             poetry
-            pkgs.mdl
+            pkgs.nodePackages.markdownlint-cli
           ];
         };
       }

@@ -1,2 +1,0 @@
-rules "~MD033"
-style "#{File.dirname(__FILE__)}/markdownlint.rb"

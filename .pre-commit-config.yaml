@@ -5,15 +5,6 @@ repos:
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
--   repo: https://github.com/markdownlint/markdownlint
-    rev: v0.11.0
-    hooks:
-    -   id: markdownlint
-        name: Markdownlint
-        description: Run markdownlint on your Markdown files
-        entry: mdl README.md docs/
-        language: ruby
-        types: [markdown]
 -   repo: local
     hooks:
     -   id: gitlint
@@ -22,6 +13,13 @@ repos:
         args: [--staged, --msg-filename]
         language: system
         stages: [commit-msg]
+-   repo: local
+    hooks:
+    -   id: markdownlint
+        name: markdownlint
+        entry: markdownlint
+        language: system
+        types: [markdown]
 -   repo: local
     hooks:
     -   id: mdformat
