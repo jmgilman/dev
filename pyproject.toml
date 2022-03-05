@@ -16,6 +16,8 @@ black = "^22.1.0"
 flake8 = "^4.0.1"
 invoke = "^1.6.0"
 makefun = "^1.13.1"
+pre-commit = "^2.17.0"
+gitlint = "^0.17.0"
 
 [tool.black]
 line-length = 79
