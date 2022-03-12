@@ -102,6 +102,13 @@ call to the `success` function as the human eye can quickly associate a green
 response with "everything went well." Likewise, use the `error` function when
 things go wrong to quickly draw attention to it.
 
+Additionally, it's often useful to disable all startup scripts when running Bash
+to isolate the environment:
+
+```bash
+env -i bash --noprofile --norc
+```
+
 ## Exit Codes
 
 Always exit on an error with a non-zero exit code. The following function should
