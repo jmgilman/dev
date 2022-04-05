@@ -127,3 +127,24 @@ GigabitEthernet0/1 is up, line protocol is up (connected)
      1 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 ```
+
+## Configuration
+
+### Configuring IPv4
+
+To add a management IPv4 address to a switch, use the following:
+
+```text
+switch (config)# interface vlan 1
+switch (config-if)# ip address 192.168.1.200 255.255.255.0
+switch (config-if)# no shut
+switch (config-if)# exit
+switch (config)# ip default-gateway 192.168.1.1
+```
+
+Replace key details where needed. Alternatively, the IP address details can be
+obtained via DHCP by substituting the second command with `ip address dhcp`.
+
+!!! note All switches use VLAN1 out of the box. If your networking is using
+VLANs, this should be changed accordingly. Additionally, it's possible for a
+switch to have an IPv4 address on multiple VLANs (simply repeat the commands).
