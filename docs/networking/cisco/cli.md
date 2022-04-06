@@ -12,7 +12,7 @@ modes, meaning they only contain commands that interact with the device but do
 not make configuration changes. The last one, however, allows running commands
 which can change the running configuration of a device.
 
-### User Mode
+### User mode
 
 This is the default exec mode that you will typically be dropped into when you
 connect to an IOS device. This mode is considered safe in that it only allows
@@ -20,7 +20,7 @@ viewing the status of the switch and does not allow an individual to make any
 disruptive changes to the device state. It's denoted by a `>` character after
 the hostname.
 
-### Privileged Mode
+### Privileged mode
 
 Identical to the user mode, except that certain additional commands are made
 available for execution. These commands can typically be disrupted, like the
@@ -32,7 +32,7 @@ after the hostname.
 | `enable`  | Enables privilged mode  |
 | `disable` | Disables privilged mode |
 
-### Configuration Mode
+### Configuration mode
 
 This is the only mode which allows running commands which can directly change
 the running configuration of the IOS device. It's typically structured with
@@ -70,7 +70,7 @@ The below table documents common usages of this operator:
 Production environments should take care to secure access to the CLI. There are
 various methods of doing this, the below sections cover common ones.
 
-### Securing Privileged Mode
+### Securing privileged mode
 
 A shared password can be set to secure privileged access (the `enable` command):
 
@@ -82,7 +82,7 @@ switch> enable secret mypassword123
 versions and **should not** be used. It stores the password in plain-text and
 can be extracted by simply examining the current running configuration.
 
-### Securing Local Console Access
+### Securing local console access
 
 The default configuration of an IOS device does not block access to the local
 console port on the device. To force a user to use a shared password when
@@ -94,7 +94,7 @@ switch> login
 switch> password mypassword123
 ```
 
-### Enabling SSH Access
+### Enabling SSH access
 
 SSH is not enabled by default and some devices do not have the cryptographic
 methods needed for handling SSH connections. However, it is the most preferred
@@ -120,7 +120,7 @@ sw1 (config)# line vty 0 15
 sw1 (config-line)# transport input ssh
 ```
 
-### Enabling Telnet Access
+### Enabling telnet access
 
 Telnet is not enabled by default. To enable it and require a password, use the
 following:
@@ -131,7 +131,7 @@ switch (config-line)# login
 switch (config-line)# password mypassword123
 ```
 
-### Securing with User Accounts
+### Securing with user accounts
 
 As an alternative to shared passwords, local user accounts can be created on
 each IOS device which can then be used at login time:
@@ -142,3 +142,29 @@ switch (config)# username myusername secret mypassword123
 
 Once configured, use `login local` in the console/telnet configuration sections
 to enable local account login ([see above section](#enabling-telnet-access)).
+
+## Common Configurations
+
+The below are some common configuration values that can be set which tend to
+improve the CLI experience on IOS devices.
+
+### Enable synchronous logging
+
+```text
+switch (config)# line console 0
+switch (config-line)# logging synchronous
+```
+
+### Disable logout timer
+
+```text
+switch (config)# line console 0
+switch (config-line)# exec-timeout 0 0
+```
+
+### Increase history buffer size
+
+```text
+switch (config)# line console 0
+switch (config-line)# history size 20
+```
