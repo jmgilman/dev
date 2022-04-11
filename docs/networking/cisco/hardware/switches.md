@@ -93,8 +93,39 @@ Gi1/2                        notconnect   1          a-full   auto RJ45
 Gi1/3                        notconnect   1          a-full   auto RJ45
 ```
 
-The port naming scheme is based on the highest speed possible for that port. You
-can further inspect a port by drilling down into it:
+The port naming scheme is based on the highest speed possible for that port.
+
+Additionally, the following command contains useful information about port
+status:
+
+```text
+Switch# show interface description
+Interface                      Status         Protocol Description
+Gi0/0                          up             up       VPC1
+Gi0/1                          up             up       VPC2
+Gi0/2                          down           down
+Gi0/3                          down           down
+Gi1/0                          down           down
+Gi1/1                          down           down
+Gi1/2                          down           down
+Gi1/3                          down           down
+```
+
+When examining the above two outputs, the following table is useful:
+
+| Line Status           | Protocol Status     | Interface Status | Root Cause                                               |
+| --------------------- | ------------------- | ---------------- | -------------------------------------------------------- |
+| administratively down | down                | disabled         | The `shutdown` command is configured on the interface    |
+| down                  | down                | notconnect       | No cable; bad cable; wrong cable pinouts; speed mismatch |
+| up                    | down                | notconnect       | This condition is unexpected on a LAN switch             |
+| down                  | down (err-disabled) | err-disabled     | Port security has disabled this interface                |
+| up                    | up                  | connected        | The interface is working correctly                       |
+
+!!! warning A duplex mismatch will show the switch as `up/up` with a `connected`
+interface status. In this case, double-check the duplex settings on both sides
+of the connection.
+
+You can further inspect a port by drilling down into it:
 
 ```text
 switch> show interface Gi0/1
@@ -128,7 +159,66 @@ GigabitEthernet0/1 is up, line protocol is up (connected)
      0 output buffer failures, 0 output buffers swapped out
 ```
 
+The following are descriptions for some of the packet terms above:
+
+| Name            | Description                                                                       |
+| --------------- | --------------------------------------------------------------------------------- |
+| Runts           | Frames which are less than 64-bytes long (including 18 for MAC addresses and FCS) |
+| Giants          | Frames that exceed the macimum frame size (typically 1518 bytes)                  |
+| Input Errors    | A total of runts, giants, no buffer, CRC, frame, overrun, and ignored counts      |
+| CRC             | Frames that did not pass the FCS                                                  |
+| Frame           | Frames which have an illegal format                                               |
+| Packet Outputs  | Total number of packets forwarded out of the interface                            |
+| Output Errors   | Total number of packets which failed being forwarded                              |
+| Collisions      | Number of collisions detected when an interface is transmitting a frame           |
+| Late Collisions | Collisions which happen after the 64th byte of the frame has been transmitted     |
+
 ## Configuration
+
+### Configuring interfaces
+
+Interfaces can be configured individually or across a range. For individual
+configuration:
+
+```text
+switch (config)# interface gi0/1
+```
+
+To configure a range of interfaces:
+
+```text
+switch (config)# interface range gi0/1-3
+```
+
+#### Adding a description
+
+```text
+switch (config-if)# description "my port"
+```
+
+#### Changing duplex/speed
+
+In most cases, these settings should be left at their default value of `auto` to
+automatically negotitating duplex and speed. However, some IoT devices in
+particular, may fail auto-negotiating and it may therefore be necessary to
+manually configure the port the device is connected to.
+
+Additionally, if a device simply does not support aut-negotation, then Cisco
+switches by default will resort to trying to sense the speed or just resort to
+using the slowest speed available if that fails. For duplex, the switch uses
+half-duplex for 10/100 links and full duplex for all others.
+
+To set the duplex mode:
+
+```text
+switch (config-if)# duplex [auto | full | half]
+```
+
+To set the speed:
+
+```text
+switch (config-if)# speed [auto | 10 | 100 | 1000 | ....]
+```
 
 ### Configuring IPv4
 
