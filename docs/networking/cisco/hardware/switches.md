@@ -173,6 +173,51 @@ The following are descriptions for some of the packet terms above:
 | Collisions      | Number of collisions detected when an interface is transmitting a frame           |
 | Late Collisions | Collisions which happen after the 64th byte of the frame has been transmitted     |
 
+### VLANs
+
+To show the status of VLANs:
+
+```text
+switch# show vlan brief
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Gi0/2, Gi0/3, Gi1/0, Gi1/1
+                                                Gi1/2, Gi1/3
+10   prod                             active    Gi0/0, Gi0/1
+1002 fddi-default                     act/unsup
+1003 token-ring-default               act/unsup
+1004 fddinet-default                  act/unsup
+1005 trnet-default                    act/unsup
+```
+
+To inspect a particular VLAN:
+
+```text
+switch# show vlan id 10
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+10   prod                             active    Gi0/0, Gi0/1
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+10   enet  100010     1500  -      -      -        -    -        0      0
+
+Remote SPAN VLAN
+----------------
+Disabled
+
+Primary Secondary Type              Ports
+------- --------- ----------------- ------------------------------------------
+```
+
+Additionally, VLAN information pertaining to a particular port can be seen with:
+
+```text
+switch# show interface gi0/2 switchport
+```
+
 ## Configuration
 
 ### Configuring interfaces
@@ -238,3 +283,113 @@ obtained via DHCP by substituting the second command with `ip address dhcp`.
 !!! note All switches use VLAN1 out of the box. If your networking is using
 VLANs, this should be changed accordingly. Additionally, it's possible for a
 switch to have an IPv4 address on multiple VLANs (simply repeat the commands).
+
+### Configuring VLANs
+
+In order for switches to be able to use VLANs, it must first be told that they
+exist:
+
+```text
+switch (config)# vlan 10
+switch (config-vlan)# name myvlan
+```
+
+Once configured, interfaces should be configured as access ports in order for
+them to be joined to the VLAN:
+
+```text
+switch (config)# int gi0/1
+switch (config-if)# switchport access vlan 10
+switch (config)# switchport mode access
+```
+
+Configuring a VLAN trunk is a bit more involved: by default, switches are
+configured with `switchport mode dynamic auto` which will never attempt to
+actually auto-negotiate a trunking protocol with other switches; rather, it will
+sit idle and wait for incoming requests to negotiate a trunking protocol. To
+force a switch into an active state:
+
+```text
+switch (config-if)# switchport mode dynamic desirable
+```
+
+The above command need only be run on **one switch** in a pair of switches,
+assuming the other switch is in its default state. Alternatively, you can skip
+using dynamic mode altogether and set the trunking explicitely:
+
+```text
+switch (config-if)# switchport trunk encapsulation dot1q
+switch (config-if)# switchport mode trunk
+```
+
+The below table summarizes all of the available administrative modes:
+
+| Mode              | Access  | Dynamic Auto | Trunk | Dynamic Desirable |
+| ----------------- | ------- | ------------ | ----- | ----------------- |
+| access            | Access  | Access       | N/A   | Access            |
+| dynamiuc auto     | Accesss | Access       | Trunk | Trunk             |
+| trunk             | N/A     | Trunk        | Trunk | Trunk             |
+| dynamic desirable | Access  | Trunk        | Trunk | Trunk             |
+
+To completely disable the Dynamic Trunking Protocol (DTP) which is responsible
+for negotiations, configure the interace with:
+
+```text
+switch (config-if)# switchport nonnegotiate
+```
+
+By default, trunks will forward all configured VLANs on the switch. To limit the
+VLANs that are forwarded over a specific trunk:
+
+```text
+switch (config-if)# switchport trunk allowed vlan 1, 2, 10-12
+```
+
+It's also possible to change the default VLAN of a trunk interface:
+
+```text
+switch (config-if)# switchport trunk native vlan 10
+```
+
+## Troubleshooting
+
+### Troubleshooting VLANs
+
+There are many different scenarios in which a VLAN may not be operating on a
+switch as expected. This section covers some common pitfalls.
+
+#### Check that the VLAN is enabled
+
+```text
+switch# sh vlan brief
+```
+
+Verify that the status column is `active`. If it's `act/lshut`, the VLAN has
+been administratively shutdown.
+
+#### Check that trunking is setup correctly
+
+If the VLAN is trunked, verify that trunking ports are working as expected:
+
+```text
+switch# show interface gi0/2 switchport
+```
+
+In particular, verify that the `Operational Mode` row indicates `trunking`. If
+it's not trunking, double-check how the port is configured. In particular, if
+the mode is set to `dynamic auto` on both ends of the trunk, it will not work.
+Try manually setting the trunking protocol on both ends.
+
+Verify that the problematic VLANs are allowed over the trunk:
+
+```text
+switch# sh interface trunk
+```
+
+The `Vlans allowed on trunk` section should list the desired VLANs. If not,
+check the trunk interface configuration, specifically if the
+`switchport trunk allowed vlan` setting has been configured.
+
+Finally, verify that the native VLAN is the same on the trunk interfaces. The
+`Native VLAN` column in the previous command should match on both sides of the
+trunk.
