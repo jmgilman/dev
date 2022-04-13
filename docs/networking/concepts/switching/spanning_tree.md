@@ -1,11 +1,11 @@
 # Rapid Spanning Tree Protocol
 
-The Rapid Spanning Tree Protocol (RSTP) is responsible for preventing loops in a
-network when redundant links are used between devices. In particular, it focuses
-on blocking certain switch ports in a topology such that a frame cannot
-infinitely recurse through the network. This is primarily done by dynamically
-examining the topology at runtime and determining which ports need to be placed
-in a *blocked* state to prevent recursion.
+The Rapid Spanning Tree Protocol (RSTP/802.1w/Q) is responsible for preventing
+loops in a network when redundant links are used between devices. In particular,
+it focuses on blocking certain switch ports in a topology such that a frame
+cannot infinitely recurse through the network. This is primarily done by
+dynamically examining the topology at runtime and determining which ports need
+to be placed in a *blocked* state to prevent recursion.
 
 In particular, RSTP prevents the following problems:
 
@@ -101,7 +101,7 @@ as needed by a network engineer.
 | 100 Gbps | N/A                 | 200                 |
 | 1 Tbps   | N/A                 | 20                  |
 
-### STP vs RSTP
+### STP features
 
 Up until this point, all processes have been the same for both RSTP And STP.
 However, STP does diverge away from RSTP, primarily in how it responds to a
@@ -122,3 +122,36 @@ to forwarding, but rather must go through two additional state:
   from the table as usual but no new ones are added.
 - Learning: The interface does not forward frames; the switch begins adding new
   MAC addresses to the table.
+
+For **each** transition, the switch must wait the configured forward delay
+period defined. Thus, in a default state, a blocking port would need to wait at
+least 10 x Hello (20 seconds) plus 15 seconds per transition (30 seconds) for a
+total of 50 seconds.
+
+### RSTP features
+
+One of the primary ways that RSTP differs from STP is by port roles:
+
+| Port Role       | Function                                                          |
+| --------------- | ----------------------------------------------------------------- |
+| Root port       | Port that begins a nonroot switch's best path to the root         |
+| Alternate port  | Port that replces the root port when the root port  fails         |
+| Designated port | Switch port designated to forward onto a collision domain         |
+| Backup port     | Port that replaces a designated port when a designated port fails |
+| Disabled port   | Port that is administratively disabled                            |
+
+Of note is the concept of an alternate port - in cases where the root port is
+determined to have failed, a switch using RSTP can immediately set the current
+root port to blocking and the alternate port to forwarding - thus bypassing any
+need for delays.
+
+In addition to the roles, RSTP uses all of the same states of STP with the
+exception of the listening state and changing the blocking state to discarding.
+
+| Function                                                            | STP State  | RSTP State |
+| ------------------------------------------------------------------- | ---------- | ---------- |
+| Port is admin disabled                                              | Disabled   | Discarding |
+| State that ignores incoming data frames and does not forward frames | Blocking   | Discarding |
+| Interim state without MAC learning and no forwarding                | Listening  | Not used   |
+| Interim state with MAC learning and no forwarding                   | Learning   | Learning   |
+| State that allows MAC learning and forwarrd of frames               | Forwarding | Forwarding |
