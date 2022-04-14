@@ -155,3 +155,12 @@ exception of the listening state and changing the blocking state to discarding.
 | Interim state without MAC learning and no forwarding                | Listening  | Not used   |
 | Interim state with MAC learning and no forwarding                   | Learning   | Learning   |
 | State that allows MAC learning and forwarrd of frames               | Forwarding | Forwarding |
+
+### MSTP Features
+
+The Multiple Spanning Tree Protocol (MSTP) was added by the IEEE in cases where
+multiple spanning trees should exist in a single network, specifically for
+covering cases that involve multiple VLANs.
+
+The bridge ID contained within a BPDU is modified by MSTP to include an
+additional 12-bit *System ID Extension* field which holds the VLAN ID.

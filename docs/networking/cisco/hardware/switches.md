@@ -218,6 +218,28 @@ Additionally, VLAN information pertaining to a particular port can be seen with:
 switch# show interface gi0/2 switchport
 ```
 
+### Spanning Tree
+
+To see the status of spanning-tree:
+
+```text
+switch# show spanning-tree
+```
+
+To limit to a single VLAN:
+
+```text
+switch# show spanning-tree vlan 10
+```
+
+### EtherChannel
+
+To see the details of a particular EtherChannel:
+
+```text
+switch# show etherchannel 1 port-channel
+```
+
 ## Configuration
 
 ### Configuring interfaces
@@ -351,6 +373,84 @@ It's also possible to change the default VLAN of a trunk interface:
 switch (config-if)# switchport trunk native vlan 10
 ```
 
+### Configuring spanning tree
+
+There are five different variations of the spanning tree protocol, with RSTP
+being the most dominant. However, Cisco switches only support three, as shown in
+the below table (which lists all five):
+
+| Name        | STP or RSTP? | # Trees   | IEEE   | Config Name |
+| ----------- | ------------ | --------- | ------ | ----------- |
+| STP         | STP          | 1 (CST)   | 802.1D | N/A         |
+| PVST+       | STP          | 1/VLAN    | 802.1D | pvst        |
+| RSTP        | RSTP         | 1 (CST)   | 802.1w | N/A         |
+| Rapid PVST+ | RSTP         | 1/VLAN    | 802.1w | rapid-pvst  |
+| MSTP        | RSTP         | 1 or more | 802.1s | mst         |
+
+Which mode of STP that is used can be configured with a global command:
+
+```text
+switch (config)# spanning-tree mode [pvst/rapid-pvst/mst]
+```
+
+Additionally, the priority on a given switch can be modified such that it's
+always elected as the root bridge (or acts as a backup):
+
+```text
+switch (config)# spanning-tree vlan 1 root [primary/secondary]
+```
+
+### Configuring EtherChannels
+
+EtherChannels are configured in the interface subconfiguration menu. To link one
+or more physical ports into an EtherChannel, you must use the same
+`channel-group` number across all physical links:
+
+```text
+switch (config)#: int gi0/0
+switch (config-if)# channel-group 1 mode on
+switch (config)#: int gi0/1
+switch (config-if)# channel-group 1 mode on
+```
+
+In most cases, you'll likely want to configure a dynamic EtherChannnel which
+will only bring the EtherChannel up if both sides are configured correctly.
+Cisco switches offer two dynamic protocols: PAgP and LACP, the former being a
+Cisco proprietary protocol. Both protocols support being in an active or passive
+state, however, for the EtherChannel to actually configure itself, one end
+should be in passive and the other in active.
+
+Confusingly, Cisco does not differentiate the protocols by name. Rather, you
+must use the correct verb to define which protocl you intend to use. For PAgP:
+
+```text
+switch (config-if)# channel-group 1 mode [desirable/auto]
+```
+
+For LACP:
+
+```text
+switch (config-if)# channel-group 1 mode  [active/passive]
+```
+
+Load distribution in a EtherChannel is a bit complex. By default, Cisco switches
+will consider the following rules first:
+
+- Avoid message reordering whenever possible
+- Make use of the switch forwarding ASICs whenever possible
+- Use all of the active links whenever possible
+
+Other than those rules, the only configuration option available is how the
+switch actually balances traffic across an EtherChannel:
+
+| Configuration | Uses                   | Layer |
+| ------------- | ---------------------- | ----- |
+| src-mac       | Source MAC             | 2     |
+| dst-mac       | Destination MAC        | 2     |
+| src-dst-mac   | Source/Destination MAC | 2     |
+| src-ip        | Source IP              | 3     |
+| dst-ip        | Destination IP\_       | z     |
+
 ## Troubleshooting
 
 ### Troubleshooting VLANs
@@ -393,3 +493,18 @@ check the trunk interface configuration, specifically if the
 Finally, verify that the native VLAN is the same on the trunk interfaces. The
 `Native VLAN` column in the previous command should match on both sides of the
 trunk.
+
+### Troubleshooting EtherChannels
+
+EtherChannels can be notoriously finicky to get set up correctly. The most
+common pitfall is the interfaces in a single EtherChannel not being configured
+the same. When creates an EtherChannel, all ports added must have identical
+values for the following properties:
+
+- Speed
+- Duplex
+- Operational access or trunking state
+- If an access port, the access VLAN
+- If a trunk port, the allowed VLAN list
+- If a trunk port, the native VLAN
+- STP interface settings
