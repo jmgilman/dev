@@ -23,7 +23,7 @@ stripped at various points. The format and contents of the header is defined by
 the IEEE 802.1Q standard. These frames are often referred to as *tagged* or
 *untagged* depending on whether the header exists or not.
 
-![An example VLAN header](static/images/vlan_header.png)
+![An example VLAN header](../../../static/images/vlan_header.png)
 
 The fields of the header are defined below:
 
