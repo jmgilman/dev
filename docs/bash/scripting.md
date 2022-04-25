@@ -34,13 +34,13 @@ Rationale:
 
 ## Conditionals
 
-This has historically been always confusing to me when it comes to writing Bash
+This has historically always been confusing to me when it comes to writing Bash
 scripts. That is, until, I came across an article that explained the `[` symbol
 is a builtin and in some cases, an actual program. Thus, the first the I wrote:
 
-````bash
+```bash
 man [
-``
+```
 
 My mind was blown and years of ambiguity was suddenly lifted as I could now
 understand the various `-{x}` references can essentially be thought of as flags.
@@ -48,7 +48,7 @@ For example:
 
 ```bash
 if [ -f filename ]
-````
+```
 
 The man page describes what the `-f` flag does. Therefore, when in doubt, use
 `man [` or `man test`.
@@ -94,7 +94,6 @@ success() {
 error() {
   printf "${red}!!! %s${reset}\n" "${*}" 1>&2
 }
-
 ```
 
 Use the `log` function for normal output. Always try to end the script with a
@@ -121,6 +120,52 @@ die() {
   error "${*}"
   exit 1
 }
+```
+
+## Interactivity
+
+The below functions are useful for asking the user basic questions:
+
+```bash
+# Usage: yesno MESSAGE
+#
+# Asks the user for an answer via y/n syntax.
+yesno() {
+ read -p "${*} [y/n] " -r
+ printf "\n"
+ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  return 1
+ else
+  return 0
+ fi
+}
+
+# Usage: yesno_exit MESSAGE
+#
+# Asks the user to confirm via y/n syntax. Exits if answer is no.
+yesno_exit() {
+ read -p "${*} [y/n] " -r
+ printf "\n"
+ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  exit 1
+ fi
+}
+```
+
+The first function can be used in a simple if statement:
+
+```bash
+if yesno "Would you like to do this thing?"; then
+  log "Doing the thing..."
+fi
+```
+
+The second function is a shortcut for the common case where the script should
+exit if the user gives a no answer:
+
+```bash
+yesno_exit "Confirm you want to do this thing?"
+log "Doing the thing..."
 ```
 
 ## Always cleanup
